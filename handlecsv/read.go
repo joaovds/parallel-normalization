@@ -5,30 +5,28 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
-func Read(filePath string, sampleSize int) error {
+func Read(filePath string, linesCh chan<- []string) (headers []string, err error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer file.Close()
+	defer close(linesCh)
 
 	reader := csv.NewReader(file)
 	reader.Comma = ','
 	reader.LazyQuotes = true
 
-	var sample [][]string
-	lineCount := 0
-
-	headers, err := reader.Read()
+	headers, err = reader.Read()
 	if err != nil {
 		fmt.Println("Err read headers:", err)
 	}
+	reader.Read()
 
 	for {
-		record, err := reader.Read()
+		line, err := reader.Read()
 		if err == io.EOF {
 			break
 		}
@@ -36,20 +34,9 @@ func Read(filePath string, sampleSize int) error {
 			fmt.Println("Err read line:", err)
 			continue
 		}
-		if lineCount < sampleSize {
-			sample = append(sample, record)
-			lineCount++
-		}
-		fmt.Println(record, len(record))
+
+		linesCh <- line
 	}
 
-	categoricalCols := IdentifyCategoricalColumns(sample)
-	fmt.Println("Colunas categóricas (índices):", categoricalCols)
-	categoricalColsNamesBuider := strings.Builder{}
-	for _, colIDX := range categoricalCols {
-		categoricalColsNamesBuider.WriteString(fmt.Sprintf(" %s |", headers[colIDX]))
-	}
-	fmt.Println("Colunas categóricas (nomes):", categoricalColsNamesBuider.String())
-
-	return nil
+	return headers, nil
 }

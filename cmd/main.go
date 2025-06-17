@@ -3,11 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/joaovds/parallel-normalization/handlecsv"
+	"github.com/joaovds/parallel-normalization/normalization"
 )
 
 func main() {
-	err := handlecsv.Read("./small_dataset.csv", 10)
+	fileToNormalize := normalization.NewFileToNormalize("./small_dataset.csv", 10, 100)
+	err := fileToNormalize.Normalize()
 	if err != nil {
 		log.Fatal(err)
 	}
