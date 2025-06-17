@@ -7,7 +7,12 @@ import (
 	"os"
 )
 
-func Read(filePath string, linesCh chan<- []string) (headers []string, err error) {
+func Read(
+	filePath string,
+	linesCh chan<- []string,
+	sampleLinesCh chan<- [][]string,
+	sampleSize int,
+) (headers []string, err error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -25,7 +30,11 @@ func Read(filePath string, linesCh chan<- []string) (headers []string, err error
 	}
 	reader.Read()
 
+	sampleCounter := 0
+	sample := make([][]string, 0, sampleSize)
+
 	for {
+		fmt.Println("processando linha")
 		line, err := reader.Read()
 		if err == io.EOF {
 			break
@@ -36,6 +45,16 @@ func Read(filePath string, linesCh chan<- []string) (headers []string, err error
 		}
 
 		linesCh <- line
+
+		if sampleCounter < sampleSize {
+			sample = append(sample, line)
+			sampleCounter++
+
+			if sampleCounter == sampleSize {
+				sampleLinesCh <- sample
+				close(sampleLinesCh)
+			}
+		}
 	}
 
 	return headers, nil
