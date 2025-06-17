@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	err := handlecsv.Read("./small_dataset.csv")
+	err := handlecsv.Read("./small_dataset.csv", 10)
 	if err != nil {
 		log.Fatal(err)
 	}
