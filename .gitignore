@@ -12,3 +12,4 @@ go.work
 
 .env
 output
+extra_large_dataset.zip

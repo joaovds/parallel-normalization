@@ -11,7 +11,7 @@ import (
 func main() {
 	start := time.Now()
 
-	fileToNormalize := normalization.NewFileToNormalize("./extra_large_dataset.csv", "./output", 8, 200000)
+	fileToNormalize := normalization.NewFileToNormalize("./small_dataset.csv", "./output", 8, 200000)
 	err := fileToNormalize.Normalize()
 	if err != nil {
 		log.Fatal(err)
