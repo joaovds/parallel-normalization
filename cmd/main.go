@@ -16,6 +16,17 @@ func main() {
 	sampleSize := flag.Int("samples", 2, "Number of samples to process (> 0)")
 	batchSize := flag.Int("batch", 4000, "Number of lines per batch (> 0")
 
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, `Parallel CSV Normalization
+
+Usage:
+%s [options]
+
+Options:
+`, os.Args[0])
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 	validateParams(*inputFile, *outputDir, *sampleSize, *batchSize)
 

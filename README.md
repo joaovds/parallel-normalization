@@ -30,19 +30,36 @@ A tool to normalize CSV files in parallel, using Go routines for high performanc
 **Running Locally**
 
 ```bash
-go run cmd/main.go
+go run cmd/main.go -i file.csv
 ```
 
 **Or with race condition detection:**
 
 ```bash
-go run -race cmd/main.go
+go run -race cmd/main.go -i file.csv
 ```
 
 ### ⚙️ Configuration
 
-Configuration is done directly in cmd/main.go:
-Maybe, in the future, you'll receive it as a parameter when you run...
+You can run the CSV normalization tool by providing the input file, output directory, number of samples to process, and batch size.
+
+**Command-line arguments:**
+
+| Flag       | Description                                                         | Default    | Required |
+| ---------- | ------------------------------------------------------------------- | ---------- | -------- |
+| `-i`       | Path to the **input CSV file**                                      | —          | ✅        |
+| `-o`       | Path to the **output directory**                                    | `./output` | ❌        |
+| `-samples` | Number of **samples (rows) to process**. Must be greater than 0    | `2`        | ❌        |
+| `-batch`   | Number of **rows per batch** for processing. Must be greater than 0 | `4000`     | ❌        |
+
+#### ✅ Example usage
+
+```bash
+go run cmd/main.go -i small_dataset.csv -o ./output -samples 10 -batch 200000
+```
+
+- The -batch flag defines how many rows are processed together in memory. Larger batches can be faster but consume more RAM.
+- The output directory will be created automatically if it doesn't exist.
 
 ### 🔄 Processing Flow
 
