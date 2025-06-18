@@ -28,13 +28,11 @@ func Read(
 	if err != nil {
 		fmt.Println("Err read headers:", err)
 	}
-	reader.Read()
 
 	sampleCounter := 0
 	sample := make([][]string, 0, sampleSize)
 
 	for {
-		fmt.Println("processando linha")
 		line, err := reader.Read()
 		if err == io.EOF {
 			break

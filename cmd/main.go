@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fileToNormalize := normalization.NewFileToNormalize("./small_dataset.csv", 10, 100)
+	fileToNormalize := normalization.NewFileToNormalize("./small_dataset.csv", "./output", 10, 100)
 	err := fileToNormalize.Normalize()
 	if err != nil {
 		log.Fatal(err)

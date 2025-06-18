@@ -23,7 +23,6 @@ func IdentifyCategoricalColumns(lines [][]string) []int {
 
 			value := strings.TrimSpace(line[i])
 			if value == "" {
-				isNumeric = false
 				break
 			}
 
