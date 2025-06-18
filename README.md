@@ -174,7 +174,7 @@ Even with the largest batch size (200k), the process completed successfully with
 
 > ⚠️ Higher batch sizes were not tested beyond 200,000 rows per batch. The current results already showed excellent performance gains without memory issues. However, performance with even larger batch sizes may vary depending on hardware limits, especially RAM and disk I/O.
 
-> If you want to test with the extra large file, just unzip it, it's in the release files
+> If you want to test with the extra large file, just unzip it, it's in the release files [release files](https://github.com/joaovds/parallel-normalization/releases)
 
 ##### **Machine Specs**
 
