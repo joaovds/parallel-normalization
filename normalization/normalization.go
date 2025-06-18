@@ -99,10 +99,18 @@ func (f *FileToNormalize) CreateBatches() {
 func (f *FileToNormalize) HandleBatches() {
 	defer f.wg.Done()
 	batchesWg := sync.WaitGroup{}
+
+	writer, err := handlecsv.NewNormalizedWriter(fmt.Sprintf("%s/dataset_normalized.csv", f.outputDir))
+	if err != nil {
+		panic(err)
+	}
+	defer writer.Close()
+
 	for batch := range f.batchesCh {
 		batchesWg.Add(1)
 		go func() {
 			batch.Normalize(f.categoricalCols, f.categoricalEncoder)
+			batch.WriteNormalizedBatchFile(writer)
 			batchesWg.Done()
 		}()
 	}
@@ -114,6 +122,6 @@ func (f *FileToNormalize) WriteCategoricalsCSV() {
 		columnName := f.headers[i]
 
 		filePath := fmt.Sprintf("%s/%s_mapping.csv", f.outputDir, columnName)
-		handlecsv.Write(filePath, column.mapping)
+		handlecsv.WriteCategoricalFiles(filePath, column.mapping)
 	}
 }

@@ -1,9 +1,11 @@
 package normalization
 
 import (
-	"fmt"
+	"log"
 	"slices"
 	"strconv"
+
+	"github.com/joaovds/parallel-normalization/handlecsv"
 )
 
 type Batch struct {
@@ -30,5 +32,11 @@ func (b *Batch) Normalize(categoricalColumns []int, ce *CategoricalEncoder) {
 		batchNormalized = append(batchNormalized, row)
 	}
 
-	fmt.Println("Normalizado:", len(batchNormalized))
+	b.Data = batchNormalized
+}
+
+func (b *Batch) WriteNormalizedBatchFile(writer *handlecsv.NormalizedWriter) {
+	if err := writer.Write(b.Data); err != nil {
+		log.Printf("Error writing normalized rows: %s", err)
+	}
 }
